@@ -6,7 +6,7 @@ const app = express();
 
 // ✅ Setup CORS options
 const corsOptions = {
-  origin: process.env.FRONTEND_URL || 'http://localhost:3000', // fallback for dev
+  origin: process.env.FRONTEND_URL || 'https://shubhamify.vercel.app', // fallback for dev
   credentials: true,
 };
 
