@@ -5,7 +5,7 @@ const logger = require('../utils/logger.js');
 const admin = require('firebase-admin');
 const fs = require('fs');
 
-const firebaseserviceAccount = require("../config/firebaseServiceAccount.json");
+const firebaseserviceAccount = require('/etc/secrets/firebaseServiceAccount.json');
 
 
 admin.initializeApp({
