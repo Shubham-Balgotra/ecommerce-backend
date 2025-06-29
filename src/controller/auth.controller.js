@@ -47,6 +47,44 @@ const login = async (req, res) => {
   }
 };
 
+// const googleLogin = async (req, res) => {
+//   try {
+//     const { token } = req.body;
+//     if (!token) {
+//       logger.error('Google login failed: No token provided');
+//       return res.status(400).send({ error: 'No token provided' });
+//     }
+//     const decodedToken = await admin.auth().verifyIdToken(token);
+//     const { email, name } = decodedToken;
+//     logger.info(`Firebase token verified for email: ${email}`);
+
+//     let user = await userService.getUserByEmail(email);
+//     if (!user) {
+//       user = await userService.createUser({
+//         email,
+//         firstName: name?.split(' ')[0] || 'Google',
+//         lastName: name?.split(' ').slice(1).join(' ') || 'User',
+//         password: null,
+//         fromGoogle: true,
+//         role: 'USER' // Ensure role matches user.model.js
+//       });
+//       logger.info(`Created new Google user: ${email}`);
+//     } else if (!user.fromGoogle) {
+//       user.fromGoogle = true;
+//       user.role = user.role || 'USER';
+//       await user.save();
+//       logger.info(`Updated user to Google user: ${email}`);
+//     }
+
+//     const jwt = jwtProvider.generateToken(user._id, user.email, user.role);
+//     logger.info(`Google login successful: ${email}`);
+//     return res.status(200).send({ token: jwt, user });
+//   } catch (error) {
+//     logger.error(`Google login error: ${error.message}`);
+//     return res.status(401).send({ error: 'Google login failed' });
+//   }
+// };
+
 const googleLogin = async (req, res) => {
   try {
     const { token } = req.body;
@@ -54,11 +92,20 @@ const googleLogin = async (req, res) => {
       logger.error('Google login failed: No token provided');
       return res.status(400).send({ error: 'No token provided' });
     }
+
     const decodedToken = await admin.auth().verifyIdToken(token);
     const { email, name } = decodedToken;
     logger.info(`Firebase token verified for email: ${email}`);
 
-    let user = await userService.getUserByEmail(email);
+    let user;
+
+    // 🔒 Catch user not found separately
+    try {
+      user = await userService.getUserByEmail(email);
+    } catch (err) {
+      logger.warn(`User not found. Creating new user for: ${email}`);
+    }
+
     if (!user) {
       user = await userService.createUser({
         email,
@@ -66,9 +113,9 @@ const googleLogin = async (req, res) => {
         lastName: name?.split(' ').slice(1).join(' ') || 'User',
         password: null,
         fromGoogle: true,
-        role: 'USER' // Ensure role matches user.model.js
+        role: 'USER'
       });
-      logger.info(`Created new Google user: ${email}`);
+      logger.info(`✅ New Google user created: ${email}`);
     } else if (!user.fromGoogle) {
       user.fromGoogle = true;
       user.role = user.role || 'USER';
@@ -77,13 +124,16 @@ const googleLogin = async (req, res) => {
     }
 
     const jwt = jwtProvider.generateToken(user._id, user.email, user.role);
-    logger.info(`Google login successful: ${email}`);
+    logger.info(`✅ Google login successful: ${email}`);
+
     return res.status(200).send({ token: jwt, user });
+
   } catch (error) {
     logger.error(`Google login error: ${error.message}`);
     return res.status(401).send({ error: 'Google login failed' });
   }
 };
+
 // For Updating Password (used in Forgot Password flow)
 const updatePassword = async (req, res) => {
     const { email, newPassword } = req.body;
