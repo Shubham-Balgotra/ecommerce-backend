@@ -3,27 +3,6 @@ const bcrypt = require("bcrypt");
 const jwtProvider = require("../config/jwtProvider");
 const logger = require("../utils/logger.js");
 
-// const createUser = async (userData) => {
-//   logger.info('User data received:', userData);
-//   try {
-//     let { firstName, lastName, email, password } = userData;
-
-//     const isUserExist = await User.findOne({ email });
-
-//     if (isUserExist) {
-//       throw new Error(`User already exists with the email: ${email}`);
-//     }
-
-//     password = await bcrypt.hash(password, 10);
-
-//     const user = await User.create({ firstName, lastName, email, password });
-//     logger.info(`User created successfully: ${user._id}`);
-//     return user;
-//   } catch (error) {
-//     logger.error(`Error creating user: ${error.message}`);
-//     throw new Error(error.message);
-//   }
-// };
 
 const createUser = async (userData) => {
   logger.info('User data received:', userData);
@@ -39,10 +18,10 @@ const createUser = async (userData) => {
     let newUser;
 
     if (fromGoogle) {
-      // ✅ Google user — do NOT hash password
+      //  Google user — do NOT hash password
       newUser = new User({ firstName, lastName, email, fromGoogle: true, role: role || "USER" });
     } else {
-      // ✅ Normal user — hash the password
+      //  Normal user — hash the password
       const hashedPassword = await bcrypt.hash(password, 10);
       newUser = new User({ firstName, lastName, email, password: hashedPassword, role: role || "USER" });
     }
