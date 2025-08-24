@@ -55,7 +55,7 @@ async function addCartItem(userId, req) {
       throw new Error("Product not found");
     }
 
-        // ✅ Check for stock availability
+        //  Check for stock availability
     if (product.quantity < 1) {
       throw new Error("Product out of stock");
     }
