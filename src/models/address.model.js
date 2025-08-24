@@ -40,7 +40,7 @@ const addressSchema = new mongoose.Schema({
     }
 });
 
-// ✅ Add index to speed up queries by user
+//  Add index to speed up queries by user
 addressSchema.index({ user: 1 });
 
 const Address = mongoose.model('address', addressSchema);
