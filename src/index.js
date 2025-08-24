@@ -4,16 +4,16 @@ const logger = require('./utils/logger.js');
 
 const app = express();
 
-// ✅ Setup CORS options
+//  Setup CORS options
 const corsOptions = {
   origin: process.env.FRONTEND_URL || 'https://claimandcarry.vercel.app', // fallback for dev
   credentials: true,
 };
 
-// ✅ Apply CORS middleware
+//  Apply CORS middleware
 app.use(cors(corsOptions));
 
-// ✅ Handle preflight (OPTIONS) requests
+//  Handle preflight (OPTIONS) requests
 app.options('*', cors(corsOptions));
 
 app.use(express.json());
@@ -31,7 +31,7 @@ app.get('/', (req, res) => {
   return res.status(200).send({ message: 'Welcome to ecommerce api', status: true });
 });
 
-// ✅ All your routes
+//  All your routes
 const authRouters = require('./routes/auth.route.js');
 app.use('/auth', authRouters);
 
@@ -74,7 +74,7 @@ app.use('/api/addresses', addressRoutes);
 const stripeWebhookRoutes = require('./routes/stripe.webhook.route.js');
 app.use('/api/stripe/webhook', stripeWebhookRoutes);
 
-// ✅ Error handler
+//  Error handler
 app.use((err, req, res, next) => {
   logger.error(`Unhandled error: ${err.message}`);
   res.status(500).send({ error: 'Something went wrong' });
