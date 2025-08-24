@@ -1,18 +1,3 @@
-// require('dotenv').config();
-// const jwt = require('jsonwebtoken');
-// const SECRET_KEY = process.env.JWT_SECRET_KEY
-
-// const generateToken = (userId, email, role) => {
-//   return jwt.sign({ userId, email, role }, process.env.JWT_SECRET_KEY, { expiresIn: '1d' });
-// };
-
-// const generateUserIdFromToken = (token)=>{
-//     const decodedToken = jwt.verify(token,SECRET_KEY)
-//     return decodedToken.userId;
-// }
-
-// module.exports = {generateToken, generateUserIdFromToken}
-
 require('dotenv').config();
 const jwt = require('jsonwebtoken');
 const logger = require('../utils/logger.js');
@@ -34,7 +19,7 @@ const generateToken = (userId, email, role) => {
   }
 };
 
-// ✅ Add this function
+//  Add this function
 const generateUserIdFromToken = (token) => {
   try {
     const decodedToken = jwt.verify(token, SECRET_KEY);
