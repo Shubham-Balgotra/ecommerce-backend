@@ -19,24 +19,24 @@ router.post(
         process.env.STRIPE_WEBHOOK_SECRET
       );
     } catch (err) {
-      logger.error(`❌ Webhook verification failed: ${err.message}`, { error: err });
+      logger.error(` Webhook verification failed: ${err.message}`, { error: err });
       return res.status(400).send(`Webhook Error: ${err.message}`);
     }
 
-    // ✅ Payment succeeded
+    //  Payment succeeded
     if (event.type === "checkout.session.completed") {
       const session = event.data.object;
       const orderId = session.metadata.orderId;
 
       try {
         await orderService.placeOrder(orderId);
-        logger.info(`✅ Order ${orderId} updated to ORDER PLACED`);
+        logger.info(` Order ${orderId} updated to ORDER PLACED`);
       } catch (error) {
-        logger.error(`❌ Failed to update order ${orderId}`, { error });
+        logger.error(` Failed to update order ${orderId}`, { error });
       }
     }
 
-    // ❌ Payment failed
+    //  Payment failed
     if (event.type === "payment_intent.failed") {
       const orderId = event.data.object.metadata?.orderId;
 
