@@ -1,5 +1,5 @@
 const jwt = require("jsonwebtoken");
-const mongoose = require("mongoose"); // ✅ Needed for ObjectId validation
+const mongoose = require("mongoose"); //  Needed for ObjectId validation
 const logger = require("../utils/logger.js");
 
 const authenticate = async (req, res, next) => {
@@ -23,13 +23,13 @@ const authenticate = async (req, res, next) => {
       return res.status(401).json({ error: "Invalid token" });
     }
 
-    // ✅ Validate userId before attaching
+    //  Validate userId before attaching
     if (!mongoose.Types.ObjectId.isValid(decoded.userId)) {
       logger.error(`Invalid userId in token: ${decoded.userId}`);
       return res.status(400).json({ error: "Invalid user ID format in token" });
     }
 
-    // ✅ Attach user info to the request safely
+    //  Attach user info to the request safely
     req.user = {
       _id: decoded.userId,
       email: decoded.email,
